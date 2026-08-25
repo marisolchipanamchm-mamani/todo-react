@@ -1,18 +1,17 @@
 import { useEffect, useState } from 'react'
-import { getAll } from './services/tarea.service'
+import { getAll, getById } from './services/tarea.service'
 
 function App() {
   const [tareas, setTareas] = useState([])
 
   useEffect(() => {
-    getAll()
-      .then((data) => {
-       console.log('DATOS RECIBIDOS:', data)
-      setTareas(data.data)
-      })
-      .catch((error) => {
-         console.error('ERROR:', error)
-      })
+   getById(13)
+  .then((data) => {
+    console.log('TAREA POR ID:', data)
+  })
+  .catch((error) => {
+    console.error('ERROR GET BY ID:', error)
+  })
   }, [])
 
   return (
