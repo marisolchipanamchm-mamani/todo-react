@@ -19,3 +19,20 @@ export async function getById(id) {
 
   return await response.json();
 }
+
+export async function create(tarea) {
+  const response = await fetch(`${API_URL}/tasks`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(tarea),
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al crear la tarea');
+  }
+
+  return await response.json();
+}
