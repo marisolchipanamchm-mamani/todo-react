@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
-import { getAll, getById, create } from './services/tarea.service'
+import { getAll } from './services/tarea.service'
+import { getAll as getCategorias } from './services/category.service'
 
 function App() {
   const [tareas, setTareas] = useState([])
+  const [categorias, setCategorias] = useState([])
 
   useEffect(() => {
     getAll()
@@ -14,25 +16,13 @@ function App() {
         console.error('ERROR:', error)
       })
 
-    getById(13)
+    getCategorias()
       .then((data) => {
-        console.log('TAREA POR ID:', data)
+        console.log('CATEGORÍAS RECIBIDAS:', data)
+        setCategorias(data.data)
       })
       .catch((error) => {
-        console.error('ERROR GET BY ID:', error)
-      })
-
-    create({
-      title: 'Tarea creada desde React',
-      description: 'Prueba del método create',
-      category_id: 4,
-      completed: false,
-    })
-      .then((data) => {
-        console.log('TAREA CREADA:', data)
-      })
-      .catch((error) => {
-        console.error('ERROR CREATE:', error)
+        console.error('ERROR CATEGORÍAS:', error)
       })
   }, [])
 
@@ -46,6 +36,26 @@ function App() {
           <p>{tarea.description}</p>
         </div>
       ))}
+
+      <h1>Lista de categorías</h1>
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {categorias.map((categoria) => (
+            <tr key={categoria.id}>
+              <td>{categoria.id}</td>
+              <td>{categoria.name}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }
