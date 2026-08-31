@@ -1,50 +1,49 @@
 const API_URL = 'http://localhost:8000/api'
 
 export async function getAll() {
-  const response = await fetch(`${API_URL}/categories`)
+  const response = await fetch(`${API_URL}/tags`)
 
   if (!response.ok) {
-    throw new Error('Error al obtener las categorías')
+    throw new Error('Error al obtener las etiquetas')
   }
 
   return await response.json()
 }
 
-export async function create(categoria) {
-  const response = await fetch(`${API_URL}/categories`, {
+export async function create(etiqueta) {
+  const response = await fetch(`${API_URL}/tags`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: JSON.stringify(categoria),
+    body: JSON.stringify(etiqueta),
   })
 
   if (!response.ok) {
-    throw new Error('Error al crear la categoría')
+    throw new Error('Error al crear la etiqueta')
   }
 
   return await response.json()
 }
-
-export async function update(id, categoria) {
-  const response = await fetch(`${API_URL}/categories/${id}`, {
+export async function update(id, etiqueta) {
+  const response = await fetch(`${API_URL}/tags/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
-    body: JSON.stringify(categoria),
+    body: JSON.stringify(etiqueta),
   })
 
   if (!response.ok) {
-    throw new Error('Error al actualizar la categoría')
+    throw new Error('Error al actualizar la etiqueta')
   }
 
   return await response.json()
 }
 export async function remove(id) {
-  const response = await fetch(`${API_URL}/categories/${id}`, {
+  const response = await fetch(`${API_URL}/tags/${id}`, {
     method: 'DELETE',
     headers: {
       'Accept': 'application/json',
@@ -52,7 +51,7 @@ export async function remove(id) {
   })
 
   if (!response.ok) {
-    throw new Error('Error al eliminar la categoría')
+    throw new Error('Error al eliminar la etiqueta')
   }
 
   return true
