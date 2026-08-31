@@ -11,12 +11,16 @@ import {
   remove as eliminarCategoria
 } from './services/category.service'
 
- import { getAll as getEtiquetas } from './services/tag.service'
+ import {
+  getAll as getEtiquetas,
+  create as crearEtiqueta
+} from './services/tag.service'
 
 function App() {
   const [tareas, setTareas] = useState([])
   const [categorias, setCategorias] = useState([])
   const [etiquetas, setEtiquetas] = useState([])
+  const [nombreEtiqueta, setNombreEtiqueta] = useState('')
   const [nombreCategoria, setNombreCategoria] = useState('')
   const [categoriaEditando, setCategoriaEditando] = useState(null)
   const [nombreCategoriaEditada, setNombreCategoriaEditada] = useState('')
@@ -116,7 +120,27 @@ function App() {
         console.error('ERROR ELIMINAR CATEGORÍA:', error)
       })
   }
+  const manejarCrearEtiqueta = () => {
+  if (!nombreEtiqueta.trim()) {
+    alert('El nombre de la etiqueta es obligatorio')
+    return
+  }
 
+  crearEtiqueta({
+    name: nombreEtiqueta
+  })
+    .then((data) => {
+      console.log('ETIQUETA CREADA:', data)
+      setNombreEtiqueta('')
+      return getEtiquetas()
+    })
+    .then((data) => {
+      setEtiquetas(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR CREAR ETIQUETA:', error)
+    })
+}
   return (
     <div>
       <h1>Lista de tareas</h1>
@@ -190,7 +214,18 @@ function App() {
         </tbody>
       </table>
        <h1>Lista de etiquetas</h1>
+        <div>
+  <input
+    type="text"
+    value={nombreEtiqueta}
+    onChange={(e) => setNombreEtiqueta(e.target.value)}
+    placeholder="Nombre de la etiqueta"
+  />
 
+  <button onClick={manejarCrearEtiqueta}>
+    Crear etiqueta
+  </button>
+</div>
       <table border="1">
         <thead>
           <tr>
