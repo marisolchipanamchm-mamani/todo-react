@@ -12,7 +12,8 @@ import {
 import {
   getAll as getEtiquetas,
   create as crearEtiqueta,
-  update as actualizarEtiqueta
+  update as actualizarEtiqueta,
+  remove as eliminarEtiqueta
 } from './services/tag.service'
 
 function App() {
@@ -83,6 +84,28 @@ function App() {
         console.error('ERROR ACTUALIZAR CATEGORÍA:', error)
       })
        }
+      const manejarEliminarEtiqueta = (id) => {
+       const confirmar = window.confirm(
+       '¿Estás seguro de que deseas eliminar esta etiqueta?'
+       )
+
+       if (!confirmar) {
+       return
+       }
+
+       eliminarEtiqueta(id)
+       .then(() => {
+       console.log('ETIQUETA ELIMINADA:', id)
+        return getEtiquetas()
+       })
+       .then((data) => {
+         setEtiquetas(data.data)
+         })
+        .catch((error) => {
+         console.error('ERROR ELIMINAR ETIQUETA:', error)
+        })
+      }
+
     const manejarActualizarEtiqueta = () => {
   if (!nombreEtiquetaEditada.trim()) {
     alert('El nombre de la etiqueta es obligatorio')
@@ -259,10 +282,14 @@ function App() {
               <td>{etiqueta.id}</td>
               <td>{etiqueta.name}</td>
               <td>
-          <button onClick={() => iniciarEdicionEtiqueta(etiqueta)}>
-                   Editar
-              </button>
-             </td>
+               <button onClick={() => iniciarEdicionEtiqueta(etiqueta)}>
+                 Editar
+                 </button>
+
+                      <button onClick={() => manejarEliminarEtiqueta(etiqueta.id)}>
+                       Eliminar
+                     </button>
+                   </td>
                </tr>
           ))}
         </tbody>
