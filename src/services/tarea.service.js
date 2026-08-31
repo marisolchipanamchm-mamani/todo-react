@@ -26,3 +26,12 @@ export async function create(tarea) {
 
   return await response.json()
 }
+export async function getById(id) {
+  const response = await fetch(`${API_URL}/tasks/${id}`)
+
+  if (!response.ok) {
+    throw new Error('Error al obtener la tarea')
+  }
+
+  return await response.json()
+}
