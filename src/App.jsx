@@ -8,9 +8,13 @@ import {
   update as actualizarCategoria,
   remove as eliminarCategoria
 } from './services/category.service'
+
+ import { getAll as getEtiquetas } from './services/tag.service'
+
 function App() {
   const [tareas, setTareas] = useState([])
   const [categorias, setCategorias] = useState([])
+  const [etiquetas, setEtiquetas] = useState([])
   const [nombreCategoria, setNombreCategoria] = useState('')
   const [categoriaEditando, setCategoriaEditando] = useState(null)
   const [nombreCategoriaEditada, setNombreCategoriaEditada] = useState('')
@@ -33,6 +37,14 @@ function App() {
       .catch((error) => {
         console.error('ERROR CATEGORÍAS:', error)
       })
+      getEtiquetas()
+  .then((data) => {
+    console.log('ETIQUETAS RECIBIDAS:', data)
+    setEtiquetas(data.data)
+  })
+  .catch((error) => {
+    console.error('ERROR ETIQUETAS:', error)
+  })
   }, [])
        const iniciarEdicionCategoria = (categoria) => {
        setCategoriaEditando(categoria)
@@ -140,6 +152,25 @@ function App() {
          Eliminar
          </button>
          </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+       <h1>Lista de etiquetas</h1>
+
+      <table border="1">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {etiquetas.map((etiqueta) => (
+            <tr key={etiqueta.id}>
+              <td>{etiqueta.id}</td>
+              <td>{etiqueta.name}</td>
             </tr>
           ))}
         </tbody>
