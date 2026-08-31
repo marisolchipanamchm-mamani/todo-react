@@ -174,12 +174,29 @@ function App() {
     <div>
       <h1>Lista de tareas</h1>
 
-      {tareas.map((tarea) => (
-        <div key={tarea.id}>
-          <h2>{tarea.title}</h2>
-          <p>{tarea.description}</p>
-        </div>
-      ))}
+    <table border="1">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Título</th>
+      <th>Descripción</th>
+      <th>Estado</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {tareas.map((tarea) => (
+      <tr key={tarea.id}>
+        <td>{tarea.id}</td>
+        <td>{tarea.title}</td>
+        <td>{tarea.description}</td>
+        <td>
+          {tarea.completed ? 'Completada' : 'Pendiente'}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
       <h1>Lista de categorías</h1>
       {categoriaEditando && (
