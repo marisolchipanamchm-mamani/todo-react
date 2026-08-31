@@ -9,9 +9,10 @@ import {
   remove as eliminarCategoria
 } from './services/category.service'
 
- import {
+import {
   getAll as getEtiquetas,
-  create as crearEtiqueta
+  create as crearEtiqueta,
+  update as actualizarEtiqueta
 } from './services/tag.service'
 
 function App() {
@@ -19,6 +20,8 @@ function App() {
   const [categorias, setCategorias] = useState([])
   const [etiquetas, setEtiquetas] = useState([])
   const [nombreEtiqueta, setNombreEtiqueta] = useState('')
+  const [etiquetaEditando, setEtiquetaEditando] = useState(null)
+  const [nombreEtiquetaEditada, setNombreEtiquetaEditada] = useState('')
   const [nombreCategoria, setNombreCategoria] = useState('')
   const [categoriaEditando, setCategoriaEditando] = useState(null)
   const [nombreCategoriaEditada, setNombreCategoriaEditada] = useState('')
@@ -53,7 +56,11 @@ function App() {
        const iniciarEdicionCategoria = (categoria) => {
        setCategoriaEditando(categoria)
         setNombreCategoriaEditada(categoria.name)
-}
+        }
+       const iniciarEdicionEtiqueta = (etiqueta) => {
+         setEtiquetaEditando(etiqueta)
+         setNombreEtiquetaEditada(etiqueta.name)
+         }
        const manejarActualizarCategoria = () => {
     if (!nombreCategoriaEditada.trim()) {
       alert('El nombre de la categoría es obligatorio')
@@ -75,7 +82,29 @@ function App() {
       .catch((error) => {
         console.error('ERROR ACTUALIZAR CATEGORÍA:', error)
       })
+       }
+    const manejarActualizarEtiqueta = () => {
+  if (!nombreEtiquetaEditada.trim()) {
+    alert('El nombre de la etiqueta es obligatorio')
+    return
   }
+
+  actualizarEtiqueta(etiquetaEditando.id, {
+    name: nombreEtiquetaEditada
+  })
+    .then((data) => {
+      console.log('ETIQUETA ACTUALIZADA:', data)
+      setEtiquetaEditando(null)
+      setNombreEtiquetaEditada('')
+      return getEtiquetas()
+    })
+    .then((data) => {
+      setEtiquetas(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR ACTUALIZAR ETIQUETA:', error)
+    })
+}
   const manejarEliminarCategoria = (id) => {
     const confirmar = window.confirm(
       '¿Estás seguro de que deseas eliminar esta categoría?'
@@ -193,20 +222,48 @@ function App() {
     Crear etiqueta
   </button>
 </div>
+    {etiquetaEditando && (
+  <div>
+    <h2>Editar etiqueta</h2>
+
+    <input
+      type="text"
+      value={nombreEtiquetaEditada}
+      onChange={(e) => setNombreEtiquetaEditada(e.target.value)}
+    />
+
+    <button onClick={manejarActualizarEtiqueta}>
+      Guardar cambios
+    </button>
+
+    <button onClick={() => {
+      setEtiquetaEditando(null)
+      setNombreEtiquetaEditada('')
+    }}>
+      Cancelar
+    </button>
+  </div>
+)}
       <table border="1">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-          </tr>
-        </thead>
+         <tr>
+         <th>ID</th>
+         <th>Nombre</th>
+         <th>Acciones</th>
+         </tr>
+       </thead>
 
         <tbody>
           {etiquetas.map((etiqueta) => (
             <tr key={etiqueta.id}>
               <td>{etiqueta.id}</td>
               <td>{etiqueta.name}</td>
-            </tr>
+              <td>
+          <button onClick={() => iniciarEdicionEtiqueta(etiqueta)}>
+                   Editar
+              </button>
+             </td>
+               </tr>
           ))}
         </tbody>
       </table>

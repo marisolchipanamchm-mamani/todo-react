@@ -26,3 +26,19 @@ export async function create(etiqueta) {
 
   return await response.json()
 }
+export async function update(id, etiqueta) {
+  const response = await fetch(`${API_URL}/tags/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(etiqueta),
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al actualizar la etiqueta')
+  }
+
+  return await response.json()
+}
