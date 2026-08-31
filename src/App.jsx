@@ -5,7 +5,8 @@ import { getAll } from './services/tarea.service'
 import {
   getAll as getCategorias,
   create as crearCategoria,
-  update as actualizarCategoria
+  update as actualizarCategoria,
+  remove as eliminarCategoria
 } from './services/category.service'
 function App() {
   const [tareas, setTareas] = useState([])
@@ -59,6 +60,27 @@ function App() {
         console.error('ERROR ACTUALIZAR CATEGORÍA:', error)
       })
   }
+  const manejarEliminarCategoria = (id) => {
+    const confirmar = window.confirm(
+      '¿Estás seguro de que deseas eliminar esta categoría?'
+    )
+
+    if (!confirmar) {
+      return
+    }
+
+    eliminarCategoria(id)
+      .then(() => {
+        console.log('CATEGORÍA ELIMINADA:', id)
+        return getCategorias()
+      })
+      .then((data) => {
+        setCategorias(data.data)
+      })
+      .catch((error) => {
+        console.error('ERROR ELIMINAR CATEGORÍA:', error)
+      })
+  }
 
   return (
     <div>
@@ -110,10 +132,14 @@ function App() {
               <td>{categoria.id}</td>
               <td>{categoria.name}</td>
                <td>
-                <button onClick={() => iniciarEdicionCategoria(categoria)}>
-                 Editar
-              </button>
-            </td>
+       <button onClick={() => iniciarEdicionCategoria(categoria)}>
+          Editar
+        </button>
+
+        <button onClick={() => manejarEliminarCategoria(categoria.id)}>
+         Eliminar
+         </button>
+         </td>
             </tr>
           ))}
         </tbody>
