@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 
-import { getAll } from './services/tarea.service'
+import {
+  getAll,
+  create as crearTarea
+} from './services/tarea.service'
 
 import {
   getAll as getCategorias,
@@ -18,6 +21,9 @@ import {
 
 function App() {
   const [tareas, setTareas] = useState([])
+  const [tituloTarea, setTituloTarea] = useState('')
+  const [descripcionTarea, setDescripcionTarea] = useState('')
+  const [categoriaTarea, setCategoriaTarea] = useState('') 
   const [categorias, setCategorias] = useState([])
   const [etiquetas, setEtiquetas] = useState([])
   const [nombreEtiqueta, setNombreEtiqueta] = useState('')
@@ -170,10 +176,74 @@ function App() {
       console.error('ERROR CREAR ETIQUETA:', error)
     })
 }
+const manejarCrearTarea = () => {
+  if (!tituloTarea.trim()) {
+    alert('El título de la tarea es obligatorio')
+    return
+  }
+
+  if (!categoriaTarea) {
+    alert('Debes seleccionar una categoría')
+    return
+  }
+
+  crearTarea({
+    title: tituloTarea,
+    description: descripcionTarea,
+    category_id: categoriaTarea,
+    completed: false
+  })
+    .then((data) => {
+      console.log('TAREA CREADA:', data)
+      setTituloTarea('')
+      setDescripcionTarea('')
+      setCategoriaTarea('')
+      return getAll()
+    })
+    .then((data) => {
+      setTareas(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR CREAR TAREA:', error)
+    })
+}
   return (
     <div>
       <h1>Lista de tareas</h1>
+      <div>
+  <h2>Crear tarea</h2>
 
+  <input
+    type="text"
+    value={tituloTarea}
+    onChange={(e) => setTituloTarea(e.target.value)}
+    placeholder="Título de la tarea"
+  />
+
+  <input
+    type="text"
+    value={descripcionTarea}
+    onChange={(e) => setDescripcionTarea(e.target.value)}
+    placeholder="Descripción de la tarea"
+  />
+
+  <select
+    value={categoriaTarea}
+    onChange={(e) => setCategoriaTarea(e.target.value)}
+  >
+    <option value="">Seleccionar categoría</option>
+
+    {categorias.map((categoria) => (
+      <option key={categoria.id} value={categoria.id}>
+        {categoria.name}
+      </option>
+    ))}
+  </select>
+
+  <button onClick={manejarCrearTarea}>
+    Crear tarea
+  </button>
+</div>
     <table border="1">
   <thead>
     <tr>
