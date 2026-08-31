@@ -1,10 +1,18 @@
 import { useEffect, useState } from 'react'
-import { getAll } from './services/tarea.service'
-import { getAll as getCategorias } from './services/category.service'
 
+import { getAll } from './services/tarea.service'
+
+import {
+  getAll as getCategorias,
+  create as crearCategoria,
+  update as actualizarCategoria
+} from './services/category.service'
 function App() {
   const [tareas, setTareas] = useState([])
   const [categorias, setCategorias] = useState([])
+  const [nombreCategoria, setNombreCategoria] = useState('')
+  const [categoriaEditando, setCategoriaEditando] = useState(null)
+  const [nombreCategoriaEditada, setNombreCategoriaEditada] = useState('')
 
   useEffect(() => {
     getAll()
@@ -25,6 +33,32 @@ function App() {
         console.error('ERROR CATEGORÍAS:', error)
       })
   }, [])
+       const iniciarEdicionCategoria = (categoria) => {
+       setCategoriaEditando(categoria)
+        setNombreCategoriaEditada(categoria.name)
+}
+       const manejarActualizarCategoria = () => {
+    if (!nombreCategoriaEditada.trim()) {
+      alert('El nombre de la categoría es obligatorio')
+      return
+    }
+
+    actualizarCategoria(categoriaEditando.id, {
+      name: nombreCategoriaEditada
+    })
+      .then((data) => {
+        console.log('CATEGORÍA ACTUALIZADA:', data)
+        setCategoriaEditando(null)
+        setNombreCategoriaEditada('')
+        return getCategorias()
+      })
+      .then((data) => {
+        setCategorias(data.data)
+      })
+      .catch((error) => {
+        console.error('ERROR ACTUALIZAR CATEGORÍA:', error)
+      })
+  }
 
   return (
     <div>
@@ -38,12 +72,35 @@ function App() {
       ))}
 
       <h1>Lista de categorías</h1>
+      {categoriaEditando && (
+  <div>
+    <h2>Editar categoría</h2>
+
+    <input
+      type="text"
+      value={nombreCategoriaEditada}
+      onChange={(e) => setNombreCategoriaEditada(e.target.value)}
+    />
+
+    <button onClick={manejarActualizarCategoria}>
+      Guardar cambios
+    </button>
+
+    <button onClick={() => {
+      setCategoriaEditando(null)
+      setNombreCategoriaEditada('')
+    }}>
+      Cancelar
+    </button>
+  </div>
+)}
 
       <table border="1">
         <thead>
           <tr>
             <th>ID</th>
             <th>Nombre</th>
+            <th>Acciones</th>
           </tr>
         </thead>
 
@@ -52,6 +109,11 @@ function App() {
             <tr key={categoria.id}>
               <td>{categoria.id}</td>
               <td>{categoria.name}</td>
+               <td>
+                <button onClick={() => iniciarEdicionCategoria(categoria)}>
+                 Editar
+              </button>
+            </td>
             </tr>
           ))}
         </tbody>
