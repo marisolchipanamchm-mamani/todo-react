@@ -22,6 +22,12 @@ import {
 
 function App() {
   const [tareas, setTareas] = useState([])
+  const [paginaActual, setPaginaActual] = useState(1)
+  const tareasPorPagina = 2
+ const totalPaginas = Math.max(
+  1,
+  Math.ceil(tareas.length / tareasPorPagina)
+)
   const [tareaSeleccionada, setTareaSeleccionada] = useState(null)
   const [tituloTarea, setTituloTarea] = useState('')
   const [descripcionTarea, setDescripcionTarea] = useState('')
@@ -39,6 +45,7 @@ function App() {
     getAll()
       .then((data) => {
         console.log('DATOS RECIBIDOS:', data)
+        console.log('CANTIDAD DE TAREAS:', data.data.length)
         setTareas(data.data)
       })
       .catch((error) => {
@@ -190,6 +197,19 @@ const manejarVerTarea = (id) => {
       alert('No se pudo obtener la tarea')
     })
 }
+const indiceUltimaTarea = paginaActual * tareasPorPagina
+const indicePrimeraTarea = indiceUltimaTarea - tareasPorPagina
+
+const tareasActuales = tareas.slice(
+  indicePrimeraTarea,
+  indiceUltimaTarea
+)
+
+
+
+console.log('TOTAL TAREAS:', tareas.length)
+console.log('TOTAL PÁGINAS:', totalPaginas)
+
 const manejarCrearTarea = () => {
   if (!tituloTarea.trim()) {
     alert('El título de la tarea es obligatorio')
@@ -301,7 +321,7 @@ const manejarCrearTarea = () => {
   </thead>
 
   <tbody>
-    {tareas.map((tarea) => (
+    {tareasActuales.map((tarea) => (
       <tr key={tarea.id}>
         <td>{tarea.id}</td>
         <td>{tarea.title}</td>
@@ -318,6 +338,25 @@ const manejarCrearTarea = () => {
     ))}
   </tbody>
 </table>
+   <div>
+  <button
+    onClick={() => setPaginaActual(paginaActual - 1)}
+    disabled={paginaActual === 1}
+  >
+    Anterior
+  </button>
+
+  <span>
+     Página {paginaActual} de {totalPaginas}
+  </span>
+
+  <button
+  onClick={() => setPaginaActual(paginaActual + 1)}
+  disabled={paginaActual === totalPaginas || totalPaginas === 0}
+>
+  Siguiente
+</button>
+</div>
 
       <h1>Lista de categorías</h1>
       {categoriaEditando && (
