@@ -54,13 +54,14 @@ function App() {
         console.error('ERROR CATEGORÍAS:', error)
       })
       getEtiquetas()
-  .then((data) => {
-    console.log('ETIQUETAS RECIBIDAS:', data)
-    setEtiquetas(data.data)
-  })
-  .catch((error) => {
-    console.error('ERROR ETIQUETAS:', error)
-  })
+        .then((data) => {
+          console.log('ETIQUETAS RECIBIDAS:', data)
+          setEtiquetas(data.data)
+      })
+      .catch((error) => {
+       console.error('ERROR ETIQUETAS:', error)
+       })
+
   }, [])
        const iniciarEdicionCategoria = (categoria) => {
        setCategoriaEditando(categoria)
