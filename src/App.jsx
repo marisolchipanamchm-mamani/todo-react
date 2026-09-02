@@ -21,6 +21,7 @@ import {
 } from './services/tag.service'
 
 function App() {
+  
   const [tareas, setTareas] = useState([])
   const [paginaActual, setPaginaActual] = useState(1)
   const tareasPorPagina = 2
@@ -41,35 +42,39 @@ function App() {
   const [categoriaEditando, setCategoriaEditando] = useState(null)
   const [nombreCategoriaEditada, setNombreCategoriaEditada] = useState('')
 
-  useEffect(() => {
-    getAll()
-      .then((data) => {
-        console.log('DATOS RECIBIDOS:', data)
-        console.log('CANTIDAD DE TAREAS:', data.data.length)
-        setTareas(data.data)
-      })
-      .catch((error) => {
-        console.error('ERROR:', error)
-      })
+ useEffect(() => {
+  
 
-    getCategorias()
-      .then((data) => {
-        console.log('CATEGORÍAS RECIBIDAS:', data)
-        setCategorias(data.data)
-      })
-      .catch((error) => {
-        console.error('ERROR CATEGORÍAS:', error)
-      })
-      getEtiquetas()
-        .then((data) => {
-          console.log('ETIQUETAS RECIBIDAS:', data)
-          setEtiquetas(data.data)
-      })
-      .catch((error) => {
-       console.error('ERROR ETIQUETAS:', error)
-       })
+  getAll()
+    .then((data) => {
+      console.log('DATOS RECIBIDOS:', data)
+      console.log('CANTIDAD DE TAREAS:', data.data.length)
+      setTareas(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR:', error)
+    })
 
-  }, [])
+  getCategorias()
+    .then((data) => {
+      console.log('CATEGORÍAS RECIBIDAS:', data)
+      setCategorias(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR CATEGORÍAS:', error)
+    })
+
+  getEtiquetas()
+    .then((data) => {
+      console.log('ETIQUETAS RECIBIDAS:', data)
+      setEtiquetas(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR ETIQUETAS:', error)
+    })
+
+}, [])
+  
        const iniciarEdicionCategoria = (categoria) => {
        setCategoriaEditando(categoria)
         setNombreCategoriaEditada(categoria.name)
