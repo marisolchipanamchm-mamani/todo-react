@@ -1,11 +1,25 @@
-const API_URL = 'http://localhost:8000/api';
+import { apiFetch } from './api'
 
 export async function getAll() {
-  const response = await fetch(`${API_URL}/categories`);
+  return await apiFetch('/categories')
+}
 
-  if (!response.ok) {
-    throw new Error('Error al obtener las categorías');
-  }
+export async function create(categoria) {
+  return await apiFetch('/categories', {
+    method: 'POST',
+    body: JSON.stringify(categoria),
+  })
+}
 
-  return await response.json();
+export async function update(id, categoria) {
+  return await apiFetch(`/categories/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(categoria),
+  })
+}
+
+export async function remove(id) {
+  return await apiFetch(`/categories/${id}`, {
+    method: 'DELETE',
+  })
 }
