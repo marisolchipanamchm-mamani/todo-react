@@ -9,3 +9,20 @@ export async function getAll() {
 
   return await response.json()
 }
+
+export async function create(etiqueta) {
+  const response = await fetch(`${API_URL}/tags`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+    body: JSON.stringify(etiqueta),
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al crear la etiqueta')
+  }
+
+  return await response.json()
+}
