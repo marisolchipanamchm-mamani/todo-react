@@ -42,3 +42,17 @@ export async function update(id, etiqueta) {
 
   return await response.json()
 }
+export async function remove(id) {
+  const response = await fetch(`${API_URL}/tags/${id}`, {
+    method: 'DELETE',
+    headers: {
+      'Accept': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    throw new Error('Error al eliminar la etiqueta')
+  }
+
+  return true
+}
