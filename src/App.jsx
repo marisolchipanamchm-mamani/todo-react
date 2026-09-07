@@ -4,7 +4,8 @@ import { getAll as getCategorias, create as crearCategoria } from './services/ca
 
 import {
   getAll,
-  create as crearTarea
+  create as crearTarea,
+  getById
 } from './services/tarea.service'
 
 import {
@@ -23,6 +24,7 @@ import {
 
 function App() {
   const [tareas, setTareas] = useState([])
+  const [tareaSeleccionada, setTareaSeleccionada] = useState(null)
   const [tituloTarea, setTituloTarea] = useState('')
   const [descripcionTarea, setDescripcionTarea] = useState('')
   const [categoriaTarea, setCategoriaTarea] = useState('') 
@@ -199,6 +201,17 @@ function App() {
       console.error('ERROR CREAR ETIQUETA:', error)
     })
 }
+const manejarVerTarea = (id) => {
+  getById(id)
+    .then((data) => {
+      console.log('TAREA RECIBIDA:', data)
+      setTareaSeleccionada(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR OBTENER TAREA:', error)
+      alert('No se pudo obtener la tarea')
+    })
+}
 const manejarCrearTarea = () => {
   if (!tituloTarea.trim()) {
     alert('El título de la tarea es obligatorio')
@@ -232,6 +245,37 @@ const manejarCrearTarea = () => {
 }
   return (
     <div>
+      {tareaSeleccionada && (
+  <div>
+    <h2>Detalle de la tarea</h2>
+
+    <p>
+      <strong>ID:</strong> {tareaSeleccionada.id}
+    </p>
+
+    <p>
+      <strong>Título:</strong> {tareaSeleccionada.title}
+    </p>
+
+    <p>
+      <strong>Descripción:</strong> {tareaSeleccionada.description}
+    </p>
+
+    <p>
+      <strong>Categoría:</strong>{' '}
+      {tareaSeleccionada.category?.name}
+    </p>
+
+    <p>
+      <strong>Estado:</strong>{' '}
+      {tareaSeleccionada.completed ? 'Completada' : 'Pendiente'}
+    </p>
+
+    <button onClick={() => setTareaSeleccionada(null)}>
+      Cerrar
+    </button>
+  </div>
+)}
       <h1>Lista de tareas</h1>
       <div>
   <h2>Crear tarea</h2>
@@ -274,6 +318,7 @@ const manejarCrearTarea = () => {
       <th>Título</th>
       <th>Descripción</th>
       <th>Estado</th>
+       <th>Acciones</th>
     </tr>
   </thead>
 
@@ -286,6 +331,11 @@ const manejarCrearTarea = () => {
         <td>
           {tarea.completed ? 'Completada' : 'Pendiente'}
         </td>
+        <td>
+          <button onClick={() => manejarVerTarea(tarea.id)}>
+           Ver
+            </button>
+           </td> 
       </tr>
     ))}
   </tbody>
