@@ -15,7 +15,7 @@ try {
 
   window.location.href = '/'
 } catch (error) {
-  console.error('ERROR LOGIN:', error)
+
   setError(error.message || 'Correo o contraseña incorrectos')
 }
 
