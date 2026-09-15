@@ -1,25 +1,25 @@
 import { useEffect, useState } from 'react'
-import { getAll } from './services/tarea.service'
-import { getAll as getCategorias, create as crearCategoria } from './services/category.service'
 
 import {
-getAll,
-create as crearTarea,
-getById
+  getAll,
+  create as crearTarea,
+  getById,
+  update as actualizarTarea,
+  remove as eliminarTarea
 } from './services/tarea.service'
 
 import {
-getAll as getCategorias,
-create as crearCategoria,
-update as actualizarCategoria,
-remove as eliminarCategoria
+  getAll as getCategorias,
+  create as crearCategoria,
+  update as actualizarCategoria,
+  remove as eliminarCategoria
 } from './services/category.service'
 
 import {
-getAll as getEtiquetas,
-create as crearEtiqueta,
-update as actualizarEtiqueta,
-remove as eliminarEtiqueta
+  getAll as getEtiquetas,
+  create as crearEtiqueta,
+  update as actualizarEtiqueta,
+  remove as eliminarEtiqueta
 } from './services/tag.service'
 
 function App() {
@@ -36,6 +36,7 @@ const [tareaSeleccionada, setTareaSeleccionada] = useState(null)
 const [tituloTarea, setTituloTarea] = useState('')
 const [descripcionTarea, setDescripcionTarea] = useState('')
 const [categoriaTarea, setCategoriaTarea] = useState('')
+const [tareaEditando, setTareaEditando] = useState(null)
 const [categorias, setCategorias] = useState([])
 const [etiquetas, setEtiquetas] = useState([])
 const [nombreEtiqueta, setNombreEtiqueta] = useState('')
@@ -239,6 +240,29 @@ console.error('ERROR OBTENER TAREA:', error)
 setError(error.message)
 })
 }
+const manejarEditarTarea = (tarea) => {
+  setTareaEditando(tarea)
+  setTituloTarea(tarea.title)
+  setDescripcionTarea(tarea.description || '')
+  setCategoriaTarea(tarea.category_id)
+}
+const manejarEliminarTarea = (id) => {
+  if (!window.confirm('¿Estás seguro de eliminar esta tarea?')) {
+    return
+  }
+
+  eliminarTarea(id)
+    .then(() => {
+      return getAll()
+    })
+    .then((data) => {
+      setTareas(data.data)
+    })
+    .catch((error) => {
+      console.error('ERROR ELIMINAR TAREA:', error)
+      setError(error.message)
+    })
+}
 
 const indiceUltimaTarea = paginaActual * tareasPorPagina
 const indicePrimeraTarea = indiceUltimaTarea - tareasPorPagina
@@ -257,6 +281,30 @@ return
 
 if (!categoriaTarea) {
   alert('Debes seleccionar una categoría')
+  return
+}
+if (tareaEditando) {
+  actualizarTarea(tareaEditando.id, {
+    title: tituloTarea,
+    description: descripcionTarea,
+    category_id: categoriaTarea,
+    completed: tareaEditando.completed
+  })
+  .then(() => {
+    setTareaEditando(null)
+    setTituloTarea('')
+    setDescripcionTarea('')
+    setCategoriaTarea('')
+    return getAll()
+  })
+  .then((data) => {
+    setTareas(data.data)
+  })
+  .catch((error) => {
+    console.error('ERROR ACTUALIZAR TAREA:', error)
+    setError(error.message)
+  })
+
   return
 }
 
@@ -363,9 +411,9 @@ return ( <div>
     </select>
 
     <button onClick={manejarCrearTarea}>
-      Crear tarea
+      {tareaEditando ? 'Actualizar tarea' : 'Crear tarea'}
     </button>
-  </div>
+   </div>
 
   <table border="1">
     <thead>
@@ -391,12 +439,17 @@ return ( <div>
           </td>
 
           <td>
-            <button
-              onClick={() => manejarVerTarea(tarea.id)}
-            >
+           <button onClick={() => manejarVerTarea(tarea.id)}>
               Ver
-            </button>
-          </td>
+          </button>
+
+           <button onClick={() => manejarEditarTarea(tarea)}>
+            Editar
+          </button>
+          <button onClick={() => manejarEliminarTarea(tarea.id)}>
+            Eliminar
+           </button>
+             </td>
         </tr>
       ))}
     </tbody>
