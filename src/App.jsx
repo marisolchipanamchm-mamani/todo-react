@@ -55,7 +55,7 @@ getAll()
 setTareas(data.data)
 })
 .catch((error) => {
-console.error('ERROR:', error)
+
 setError(error.message)
 })
 
@@ -65,7 +65,7 @@ getCategorias()
     setCategorias(data.data)
   })
   .catch((error) => {
-    console.error('ERROR CATEGORÍAS:', error)
+
     setError(error.message)
   })
 
@@ -74,7 +74,7 @@ getEtiquetas()
     setEtiquetas(data.data)
   })
   .catch((error) => {
-    console.error('ERROR ETIQUETAS:', error)
+
     setError(error.message)
   })
 
@@ -108,7 +108,7 @@ const manejarCrearCategoria = () => {
       setCategorias(data.data)
     })
     .catch((error) => {
-      console.error('ERROR CREAR CATEGORÍA:', error)
+
       setError(error.message)
     })
 }
@@ -132,7 +132,7 @@ actualizarCategoria(categoriaEditando.id, {
     setCategorias(data.data)
   })
   .catch((error) => {
-    console.error('ERROR ACTUALIZAR CATEGORÍA:', error)
+
     setError(error.message)
   })
 
@@ -153,7 +153,7 @@ setEtiquetas(data.data)
 setEtiquetaAEliminar(null)
 })
 .catch((error) => {
-console.error('ERROR ELIMINAR ETIQUETA:', error)
+
 setError(error.message)
 setEtiquetaAEliminar(null)
 })
@@ -178,7 +178,7 @@ actualizarEtiqueta(etiquetaEditando.id, {
     setEtiquetas(data.data)
   })
   .catch((error) => {
-    console.error('ERROR ACTUALIZAR ETIQUETA:', error)
+
     setError(error.message)
   })
 
@@ -199,7 +199,7 @@ setCategorias(data.data)
 setCategoriaAEliminar(null)
 })
 .catch((error) => {
-console.error('ERROR ELIMINAR CATEGORÍA:', error)
+
 setError(error.message)
 setCategoriaAEliminar(null)
 })
@@ -223,7 +223,7 @@ crearEtiqueta({
     setEtiquetas(data.data)
   })
   .catch((error) => {
-    console.error('ERROR CREAR ETIQUETA:', error)
+
     setError(error.message)
   })
 
@@ -236,7 +236,7 @@ getById(id)
 setTareaSeleccionada(data.data)
 })
 .catch((error) => {
-console.error('ERROR OBTENER TAREA:', error)
+
 setError(error.message)
 })
 }
@@ -259,7 +259,7 @@ const manejarEliminarTarea = (id) => {
       setTareas(data.data)
     })
     .catch((error) => {
-      console.error('ERROR ELIMINAR TAREA:', error)
+
       setError(error.message)
     })
 }
@@ -301,7 +301,7 @@ if (tareaEditando) {
     setTareas(data.data)
   })
   .catch((error) => {
-    console.error('ERROR ACTUALIZAR TAREA:', error)
+
     setError(error.message)
   })
 
@@ -324,7 +324,7 @@ crearTarea({
     setTareas(data.data)
   })
   .catch((error) => {
-    console.error('ERROR CREAR TAREA:', error)
+
     setError(error.message)
    })
   }
