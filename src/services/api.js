@@ -18,9 +18,15 @@ export async function apiFetch(endpoint, options = {}) {
     headers,
   })
 
-  if (!response.ok) {
-    throw new Error('Error en la petición')
-  }
+ if (response.status === 401) {
+  localStorage.removeItem('token')
+  window.location.href = '/login'
+  return
+}
+
+if (!response.ok) {
+  throw new Error('Error en la petición')
+}
 
   return await response.json()
 }
